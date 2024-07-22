@@ -1,1 +1,1 @@
-# Cabin Log Interal Dashboard
+# CabinLogs Internal Dashboard
