@@ -1,5 +1,4 @@
 using CabinLogsApi.DTO.Cabins;
-using CabinLogsApi.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,5 +2,5 @@ using CabinLogsApi.Models;
 
 interface ISettingServie
 {
-	public List<Setting> GetSettings();
+	public Task<List<Setting>> GetSettings();
 }

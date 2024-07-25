@@ -27,7 +27,6 @@ public class CabinServiceTests : IDisposable
         // Assert
         cabins.Should().NotBeEmpty();
         cabins.Should().BeOfType<List<Cabin>>();
-        cabins.Should().HaveCount(1);
         cabins.Should().BeEquivalentTo(new List<Cabin>
         {
             new Cabin

@@ -18,11 +18,18 @@ public class CabinService : ICabinService
 
 	public async Task<List<Cabin>> GetCabins()
 	{
-		var cabins = await _context.Cabins.ToListAsync();
-		if (cabins.Count == 0)
+		try
 		{
-			return new List<Cabin>();
+			var cabins = await _context.Cabins.ToListAsync();
+			if (cabins.Count == 0)
+			{
+				return new List<Cabin>();
+			}
+			return cabins;
 		}
-		return cabins;
+		catch (Exception ex)
+		{
+			throw new Exception($"Error occurred when accessing Database: {ex.Message}");
+		}
 	}
 }
