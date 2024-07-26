@@ -1,0 +1,464 @@
+{
+	"info": {
+		"_postman_id": "94d41bdb-e604-4b89-bd05-60eb5b4cc35f",
+		"name": "CabinLogs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16805945"
+	},
+	"item": [
+		{
+			"name": "Cabins",
+			"item": [
+				{
+					"name": "Get Cabins",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for types with the response\", () => {\r",
+									"    pm.expect(response).to.be.an('array'); \r",
+									"\r",
+									"    response.forEach(cabin => {\r",
+									"        pm.expect(cabin).to.be.an('object'); \r",
+									"\r",
+									"        pm.expect(cabin).to.have.property('id').that.is.a('number');\r",
+									"        pm.expect(cabin).to.have.property('created_at').that.is.a('string');\r",
+									"        pm.expect(cabin).to.have.property('name').that.is.a('string');\r",
+									"        pm.expect(cabin).to.have.property('maxCapacity').that.is.a('number');\r",
+									"        pm.expect(cabin).to.have.property('regularPrice').that.is.a('number');\r",
+									"        pm.expect(cabin).to.have.property('discount').that.is.a('number');\r",
+									"        pm.expect(cabin).to.have.property('description').that.is.a('string');\r",
+									"        pm.expect(cabin).to.have.property('image');\r",
+									"        pm.expect(cabin.image).to.be.oneOf([null, 'string'])\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/cabins",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"cabins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a cabin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for types with the response\", () => {\r",
+									"    pm.expect(response).to.be.an('object'); \r",
+									"\r",
+									"    pm.expect(response).to.have.property('id').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('created_at').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('name').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('maxCapacity').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('regularPrice').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('discount').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('description').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('image');\r",
+									"    pm.expect(response.image).to.be.oneOf([null, 'string'])\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/cabins/:cabinId",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"cabins",
+								":cabinId"
+							],
+							"variable": [
+								{
+									"key": "cabinId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Guests",
+			"item": [
+				{
+					"name": "Get Guests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for types with the response\", () => {\r",
+									"    pm.expect(response).to.be.an('array'); \r",
+									"\r",
+									"    response.forEach(guest => {\r",
+									"        pm.expect(guest).to.be.an('object'); \r",
+									"\r",
+									"        pm.expect(guest).to.have.property('id').that.is.a('number');\r",
+									"        pm.expect(guest).to.have.property('created_at').that.is.a('string');\r",
+									"        pm.expect(guest).to.have.property('fullName').that.is.a('string');\r",
+									"        pm.expect(guest).to.have.property('email');\r",
+									"        pm.expect(guest.email).to.be.oneOf([null, 'string']);\r",
+									"        pm.expect(guest).to.have.property('nationalId').that.is.a('string');\r",
+									"        pm.expect(guest).to.have.property('nationality').that.is.a('string');\r",
+									"        pm.expect(guest).to.have.property('countryFlag');\r",
+									"        pm.expect(guest.countryFlag).to.be.oneOf([null, 'string'])\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/guests",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"guests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a guest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for types with the response\", () => {\r",
+									"    pm.expect(response).to.be.an('object'); \r",
+									"\r",
+									"    pm.expect(response).to.have.property('id').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('created_at').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('fullName').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('email');\r",
+									"    pm.expect(response.email).to.be.oneOf([null, 'string']);\r",
+									"    pm.expect(response).to.have.property('nationalId').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('nationality').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('countryFlag');\r",
+									"    pm.expect(response.countryFlag).to.be.oneOf([null, 'string'])\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/guests/:guestId",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"guests",
+								":guestId"
+							],
+							"variable": [
+								{
+									"key": "guestId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Settings",
+			"item": [
+				{
+					"name": "Get settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for types with the response\", () => {\r",
+									"    pm.expect(response).to.be.an('array'); \r",
+									"\r",
+									"    response.forEach(setting => {\r",
+									"        pm.expect(setting).to.be.an('object'); \r",
+									"\r",
+									"        pm.expect(setting).to.have.property('id').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('created_at').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('minBookingLength').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('maxBookingLength').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('maxGuestsPerBooking').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('breakfastPrice').that.is.a('number');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/settings",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Get Bookings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for properties inside the response\", () => {\r",
+									"    pm.expect(response).to.be.an('array'); \r",
+									"\r",
+									"    response.forEach(setting => {\r",
+									"        pm.expect(setting).to.be.an('object'); \r",
+									"\r",
+									"        pm.expect(setting).to.have.property('id').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('created_at').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('startDate').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('endDate').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('numberOfNights').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('numGuests').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('cabinPrice').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('extrasPrice').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('totalPrice').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('status').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('hasBreakfast').that.is.a('boolean');\r",
+									"        pm.expect(setting).to.have.property('isPaid').that.is.a('boolean');\r",
+									"        pm.expect(setting).to.have.property('observations').that.is.a('string');\r",
+									"        pm.expect(setting).to.have.property('cabinId').that.is.a('number');\r",
+									"        pm.expect(setting).to.have.property('guestId').that.is.a('number');\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/bookings",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.clear();\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check for status code 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check for properties inside the response\", () => {\r",
+									"    pm.expect(response).to.be.an('object'); \r",
+									"\r",
+									"    pm.expect(response).to.have.property('id').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('created_at').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('startDate').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('endDate').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('numberOfNights').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('numGuests').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('cabinPrice').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('extrasPrice').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('totalPrice').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('status').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('hasBreakfast').that.is.a('boolean');\r",
+									"    pm.expect(response).to.have.property('isPaid').that.is.a('boolean');\r",
+									"    pm.expect(response).to.have.property('observations').that.is.a('string');\r",
+									"    pm.expect(response).to.have.property('cabinId').that.is.a('number');\r",
+									"    pm.expect(response).to.have.property('guestId').that.is.a('number');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/bookings/:bookingId",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"bookings",
+								":bookingId"
+							],
+							"variable": [
+								{
+									"key": "bookingId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aHVlc2VzdnhqdHBnZGdoYnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE3MTIxNzUsImV4cCI6MjAzNzI4ODE3NX0.tLiH3Z6spAmA_dNjVrrV8ZRPB-ZVzXlVJ4eyqBDFg7U",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6aHVlc2VzdnhqdHBnZGdoYnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE3MTIxNzUsImV4cCI6MjAzNzI4ODE3NX0.tLiH3Z6spAmA_dNjVrrV8ZRPB-ZVzXlVJ4eyqBDFg7U",
+			"type": "string"
+		}
+	]
+}
