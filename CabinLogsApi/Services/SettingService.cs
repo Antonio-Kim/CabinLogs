@@ -1,7 +1,7 @@
 using CabinLogsApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class SettingService : ISettingServie
+public class SettingService : ISettingService
 {
 	private readonly ApplicationDbContext _context;
 	public SettingService(ApplicationDbContext context)

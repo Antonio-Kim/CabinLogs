@@ -12,6 +12,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ICabinService, CabinService>();
+builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<ISettingService, SettingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 builder.Services.AddCors(options =>
 {

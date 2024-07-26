@@ -9,7 +9,8 @@
 # Migrations
 Migrations
 CabinLogs.db
-
+CabinLogs.db-shm
+CabinLogs.db-wal
 # User-specific files
 *.rsuser
 *.suo

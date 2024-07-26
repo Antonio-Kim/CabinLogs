@@ -2,6 +2,8 @@ using CabinLogsApi.DTO.Cabins;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
+namespace CabinLogsApi.Controllers;
+
 [ApiController]
 [Route("/cabins")]
 [EnableCors("AnyOrigins")]
