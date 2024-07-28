@@ -4,4 +4,5 @@ public interface ICabinService
 {
 	public Task<List<Cabin>> GetCabins();
 	public Task<Cabin?> GetCabin(int id);
+	public Task<bool> RemoveCabin(int id);
 }

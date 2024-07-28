@@ -32,4 +32,23 @@ public class CabinService : ICabinService
 			throw new Exception($"Error occurred when accessing Database: {ex.Message}");
 		}
 	}
+
+	public async Task<bool> RemoveCabin(int id)
+	{
+		try
+		{
+			var cabin = await _context.Cabins.FindAsync(id);
+			if (cabin == null)
+			{
+				return false;
+			}
+			_context.Cabins.Remove(cabin);
+			await _context.SaveChangesAsync();
+			return true;
+		}
+		catch (Exception)
+		{
+			throw new Exception("Error occurred when removing cabin.");
+		}
+	}
 }

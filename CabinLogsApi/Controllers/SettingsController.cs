@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CabinLogsApi.Controllers;
 
 [ApiController]
-[EnableCors("AnyOrigins")]
 [Route("settings")]
 public class SettingsController : ControllerBase
 {

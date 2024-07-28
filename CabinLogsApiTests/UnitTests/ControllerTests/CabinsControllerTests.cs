@@ -10,7 +10,7 @@ namespace CabinLogsApiTests.UnitTests.ControllerTests;
 
 public class CabinsControllerTests : IDisposable
 {
-    private readonly ApplicationDbContextFakeBuilder _ctxBuild = new ();
+    private readonly ApplicationDbContextFakeBuilder _ctxBuild = new();
     public void Dispose()
     {
         _ctxBuild.Dispose();
@@ -98,6 +98,56 @@ public class CabinsControllerTests : IDisposable
             description = "Small luxury cab in the woods",
             image = null,
         }, options => options.Excluding(c => c.created_at));
+    }
+
+    [Fact]
+    public async Task DeleteCabin_WithValidId_ReturnsNoContent()
+    {
+        // Arrange
+        var context = _ctxBuild.WithCabins().WithGuests().WithSettings().Build();
+        var cabinService = new CabinService(context);
+        var _sut = new CabinsController(cabinService);
+
+        // Act
+        var Result = await _sut.DeleteCabin(1);
+
+        // Assert
+        var deleteResult = Result as NoContentResult;
+        deleteResult.Should().NotBeNull();
+        deleteResult?.StatusCode.Should().Be(204);
+    }
+
+    [Fact]
+    public async Task DeleteCabin_WithInvalidId_ReturnsNotFound()
+    {
+        // Arrange
+        var context = _ctxBuild.WithCabins().WithGuests().WithSettings().Build();
+        var cabinService = new CabinService(context);
+        var _sut = new CabinsController(cabinService);
+
+        // Act
+        var Result = await _sut.DeleteCabin(2);
+
+        // Assert
+        var deleteResult = Result as NotFoundResult;
+        deleteResult.Should().NotBeNull();
+        deleteResult?.StatusCode.Should().Be(404);
+    }
+
+    [Fact]
+    public async Task DeleteCabin_WithEmptyList_ReturnsNotFound()
+    {
+        // Arrange
+        var context = _ctxBuild.WithGuests().WithSettings().Build();
+        var cabinService = new CabinService(context);
+        var _sut = new CabinsController(cabinService);
+
+        // Act
+        var Result = await _sut.DeleteCabin(1);
+
+        // Assert
+        var deleteResult = Result as NotFoundResult;
+        deleteResult?.StatusCode.Should().Be(404);
     }
 }
 

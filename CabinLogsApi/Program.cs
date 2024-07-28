@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
         cfg.AllowAnyHeader();
         cfg.AllowAnyMethod();
     });
-    options.AddPolicy(name: "AnyOrigin",
+    options.AddPolicy(name: "webapi",
         cfg =>
         {
             cfg.AllowAnyOrigin();
@@ -42,10 +42,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("webapi");
 
 app.UseHttpsRedirection();
-
-app.UseCors("AnyOrigin");
 
 app.UseAuthorization();
 

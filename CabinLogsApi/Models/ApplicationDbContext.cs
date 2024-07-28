@@ -19,7 +19,7 @@ public class ApplicationDbContext : DbContext
 		modelBuilder.Entity<Booking>()
 			.HasOne(g => g.Guest)
 			.WithMany(b => b.bookings)
-			.HasForeignKey(k =>k.guestId)
+			.HasForeignKey(k => k.guestId)
 			.IsRequired()
 			.OnDelete(DeleteBehavior.Cascade);
 
@@ -32,6 +32,61 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 250,
 			discount = 50,
 			description = "Small luxury cab in the woods",
+			image = null,
+		});
+		modelBuilder.Entity<Cabin>().HasData(new Cabin
+		{
+			id = 2,
+			created_at = DateTime.UtcNow,
+			name = "002",
+			maxCapacity = 4,
+			regularPrice = 400,
+			discount = 75,
+			description = "test",
+			image = null,
+		});
+		modelBuilder.Entity<Cabin>().HasData(new Cabin
+		{
+			id = 3,
+			created_at = DateTime.UtcNow,
+			name = "003",
+			maxCapacity = 4,
+			regularPrice = 400,
+			discount = 0,
+			description = null,
+			image = null,
+		});
+		modelBuilder.Entity<Cabin>().HasData(new Cabin
+		{
+			id = 4,
+			created_at = DateTime.UtcNow,
+			name = "004",
+			maxCapacity = 4,
+			regularPrice = 400,
+			discount = 0,
+			description = null,
+			image = null,
+		});
+		modelBuilder.Entity<Cabin>().HasData(new Cabin
+		{
+			id = 5,
+			created_at = DateTime.UtcNow,
+			name = "005",
+			maxCapacity = 4,
+			regularPrice = 800,
+			discount = 0,
+			description = null,
+			image = null,
+		});
+		modelBuilder.Entity<Cabin>().HasData(new Cabin
+		{
+			id = 6,
+			created_at = DateTime.UtcNow,
+			name = "003",
+			maxCapacity = 10,
+			regularPrice = 1000,
+			discount = 200,
+			description = null,
 			image = null,
 		});
 		modelBuilder.Entity<Guest>().HasData(new Guest

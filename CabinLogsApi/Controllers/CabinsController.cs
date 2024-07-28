@@ -6,7 +6,6 @@ namespace CabinLogsApi.Controllers;
 
 [ApiController]
 [Route("/cabins")]
-[EnableCors("AnyOrigins")]
 public class CabinsController : ControllerBase
 {
     private readonly ICabinService _cabinService;
@@ -60,4 +59,21 @@ public class CabinsController : ControllerBase
 
     }
 
+    [HttpDelete("{id}", Name = "Remove a cabin")]
+    public async Task<IActionResult> DeleteCabin(int id)
+    {
+        try
+        {
+            var cabin = await _cabinService.RemoveCabin(id);
+            if (cabin == false)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Something went wrong");
+        }
+    }
 }

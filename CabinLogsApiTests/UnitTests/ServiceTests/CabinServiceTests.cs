@@ -98,5 +98,53 @@ public class CabinServiceTests : IDisposable
         // Assert
         cabin.Should().BeNull();
     }
+
+    [Fact]
+    public async Task DeleteCabin_WithOneCabin_ReturnsTrue()
+    {
+        // Arrange
+        var ctx = _ctxBuilder.WithCabins().Build();
+        _sut = new CabinService(ctx);
+
+        // Act
+        var result = await _sut.RemoveCabin(1);
+
+        // Assert
+        result.Should().BeTrue();
+        var cabins = await _sut.GetCabins();
+        cabins.Should().NotBeNull();
+        cabins.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task DeleteCabin_WithEmptyList_ReturnsFalse()
+    {
+        // Arrange
+        var ctx = _ctxBuilder.Build();
+        _sut = new CabinService(ctx);
+
+        // Act
+        var result = await _sut.RemoveCabin(1);
+
+        // Assert
+        result.Should().BeFalse();
+        var cabins = await _sut.GetCabins();
+        cabins.Should().NotBeNull();
+        cabins.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task DeleteCabin_WithInvalidId_ReturnsFalse()
+    {
+        // Arrange
+        var ctx = _ctxBuilder.WithCabins().Build();
+        _sut = new CabinService(ctx);
+
+        // Act
+        var result = await _sut.RemoveCabin(5);
+        var cabins = await _sut.GetCabins();
+        cabins.Should().NotBeNull();
+        cabins.Should().HaveCount(1);
+    }
 }
 
