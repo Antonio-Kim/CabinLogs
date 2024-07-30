@@ -32,7 +32,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 250,
 			discount = 50,
 			description = "Small luxury cab in the woods",
-			image = null,
+			image = "images/cabin-001.jpg",
 		});
 		modelBuilder.Entity<Cabin>().HasData(new Cabin
 		{
@@ -43,7 +43,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 400,
 			discount = 75,
 			description = "test",
-			image = null,
+			image = "images/cabin-002.jpg",
 		});
 		modelBuilder.Entity<Cabin>().HasData(new Cabin
 		{
@@ -54,7 +54,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 400,
 			discount = 0,
 			description = null,
-			image = null,
+			image = "images/cabin-003.jpg",
 		});
 		modelBuilder.Entity<Cabin>().HasData(new Cabin
 		{
@@ -65,7 +65,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 400,
 			discount = 0,
 			description = null,
-			image = null,
+			image = "images/cabin-004.jpg",
 		});
 		modelBuilder.Entity<Cabin>().HasData(new Cabin
 		{
@@ -76,7 +76,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 800,
 			discount = 0,
 			description = null,
-			image = null,
+			image = "images/cabin-005.jpg",
 		});
 		modelBuilder.Entity<Cabin>().HasData(new Cabin
 		{
@@ -87,7 +87,7 @@ public class ApplicationDbContext : DbContext
 			regularPrice = 1000,
 			discount = 200,
 			description = null,
-			image = null,
+			image = "images/cabin-006.jpg",
 		});
 		modelBuilder.Entity<Guest>().HasData(new Guest
 		{

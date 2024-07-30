@@ -64,7 +64,7 @@ function CabinRow({ cabin }: CabinRowProps) {
 
   return (
     <TableRow role="row">
-      <Img src={image} />
+      <Img src={`http://localhost:5000/${image}`} />
       <Cabin>{name}</Cabin>
       <div>Fits up to {maxCapacity}</div>
       <Price>{regularPrice}</Price>
