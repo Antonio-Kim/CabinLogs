@@ -9,14 +9,11 @@ export type Cabins = {
   image: string;
 };
 
-export async function createCabin(newCabin: Cabins): Promise<void> {
+export async function createCabin(formData: FormData): Promise<void> {
   try {
     const response = await fetch('http://localhost:5000/cabins', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newCabin),
+      body: formData,
     });
     if (!response.ok) {
       const errorText = await response.text();

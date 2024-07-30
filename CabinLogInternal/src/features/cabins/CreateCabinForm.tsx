@@ -17,7 +17,7 @@ type FormData = {
   regularPrice: number;
   discount: number;
   description: string;
-  image?: string;
+  image?: FileList;
 };
 
 function CreateCabinForm() {
@@ -35,7 +35,26 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data: FormData) {
-    mutate(data);
+    console.log('Form data:', data);
+    const fileList = getValues('image') as FileList;
+    console.log('FileList: ', fileList);
+
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('maxCapacity', data.maxCapacity.toString());
+    formData.append('regularPrice', data.regularPrice.toString());
+    formData.append('discount', data.discount.toString());
+    formData.append('description', data.description);
+
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      console.log('First file', file);
+      formData.append('image', file);
+    }
+
+    console.log('Form Data: ', formData);
+
+    mutate(formData);
   }
 
   function onError(errors) {
@@ -101,9 +120,12 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+      <FormRow label="Cabin photo" error={errors?.image?.message}>
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register('image', { required: 'This field is required' })}
+        />
       </FormRow>
 
       <FormRow>
