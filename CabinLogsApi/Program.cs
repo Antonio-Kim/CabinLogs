@@ -45,6 +45,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("webapi");
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

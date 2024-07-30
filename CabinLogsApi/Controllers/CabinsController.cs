@@ -1,4 +1,5 @@
 using CabinLogsApi.DTO.Cabins;
+using CabinLogsApi.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,5 +76,50 @@ public class CabinsController : ControllerBase
         {
             return StatusCode(500, "Something went wrong");
         }
+    }
+
+    [HttpPost(Name = "Add a cabin")]
+    public async Task<IActionResult> AddCabin([FromBody] CabinDTO cabin)
+    {
+        if (cabin == null)
+        {
+            return BadRequest("Cabin is empty.");
+        }
+
+        var newCabin = new Cabin
+        {
+            id = cabin.Id,
+            created_at = DateTime.UtcNow,
+            name = cabin.Name,
+            maxCapacity = cabin.MaxCapacity,
+            regularPrice = cabin.RegularPrice,
+            discount = cabin.Discount,
+            description = cabin.Description,
+            image = cabin.Image
+        };
+
+        var result = await _cabinService.AddCabin(newCabin);
+        if (result)
+        {
+            return CreatedAtAction(nameof(GetCabin), new { id = newCabin.id }, newCabin);
+        }
+
+        return Conflict("A cabin with same ID already exists.");
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCabin(int id, [FromBody] Cabin updatedCabin)
+    {
+        if (updatedCabin == null)
+        {
+            return BadRequest("Cabin is empty.");
+        }
+        var result = await _cabinService.UpdateCabin(id, updatedCabin);
+        if (result)
+        {
+            return NoContent();
+        }
+
+        return NotFound("Cabin not found.");
     }
 }

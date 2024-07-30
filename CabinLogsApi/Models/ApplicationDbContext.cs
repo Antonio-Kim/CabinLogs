@@ -82,7 +82,7 @@ public class ApplicationDbContext : DbContext
 		{
 			id = 6,
 			created_at = DateTime.UtcNow,
-			name = "003",
+			name = "006",
 			maxCapacity = 10,
 			regularPrice = 1000,
 			discount = 200,

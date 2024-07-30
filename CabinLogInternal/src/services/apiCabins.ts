@@ -1,22 +1,45 @@
-export type Cabin = {
+export type Cabins = {
   id: number;
   created_at: string;
-  startDate: string;
-  endDate: string;
-  numberOfNights: string;
-  numGuests: string;
-  cabinPrice: number;
-  extrasPrice: number;
-  totalPrice: number;
-  status: string;
-  hasBreakfast: boolean;
-  isPaid: boolean;
-  observations: string;
-  cabinId: number;
-  guestId: number;
+  name: string;
+  maxCapacity: number;
+  regularPrice: number;
+  discount: number;
+  description: string;
+  image: string;
 };
 
-export async function getCabins(): Promise<Cabin[]> {
+export async function createCabin(newCabin: Cabins): Promise<void> {
+  try {
+    const response = await fetch('http://localhost:5000/cabins', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCabin),
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to create cabin: ${errorText}`);
+    }
+  } catch (error) {
+    console.error(`Error Occurred: ${error}`);
+  }
+}
+
+export async function deleteCabin(id: number): Promise<void> {
+  const response = await fetch(`http://localhost:5000/cabins/${id}`, {
+    method: 'DELETE',
+  });
+  if (response.status === 404) {
+    throw new Error('Cabin could not be deleted.');
+  }
+  if (!response.ok) {
+    throw new Error('Failed to delete cabin.');
+  }
+}
+
+export async function getCabins(): Promise<Cabins[]> {
   try {
     const response = await fetch('http://localhost:5000/cabins', {
       method: 'GET',
@@ -27,10 +50,10 @@ export async function getCabins(): Promise<Cabin[]> {
     if (!response.ok) {
       throw new Error(`Error occurred while fetching cabins`);
     }
-    const data: Cabin[] = await response.json();
+    const data: Cabins[] = await response.json();
     return data;
-  } catch (e) {
-    console.error(`Error occurred: ${e}`);
+  } catch (error) {
+    console.error(`Error occurred: ${error}`);
     return [];
   }
 }
