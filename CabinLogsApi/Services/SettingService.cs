@@ -24,4 +24,30 @@ public class SettingService : ISettingService
 			throw new Exception($"Error occurred when accessing Database: {ex.Message}");
 		}
 	}
+
+	public async Task<List<Setting>> UpdateSettings(Setting setting)
+	{
+		try
+		{
+			var settings = await _context.Settings.ToListAsync();
+			if (settings.Count == 0)
+			{
+				throw new InvalidOperationException("No settings found to update.");
+			}
+			var existingSetting = settings[0];
+			existingSetting.minBookingLength = setting.minBookingLength;
+			existingSetting.maxBookingLength = setting.maxBookingLength;
+			existingSetting.maxGuestsPerBooking = setting.maxGuestsPerBooking;
+			existingSetting.breakfastPrice = setting.breakfastPrice;
+
+			await _context.SaveChangesAsync();
+
+			return settings;
+
+		}
+		catch (Exception ex)
+		{
+			throw new Exception($"Error occurred when accessing Database: {ex.Message}");
+		}
+	}
 }

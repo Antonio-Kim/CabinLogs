@@ -1,4 +1,5 @@
 using CabinLogsApi.DTO.Setting;
+using CabinLogsApi.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,20 @@ public class SettingsController : ControllerBase
 		catch (Exception)
 		{
 			return StatusCode(StatusCodes.Status500InternalServerError, "Failed to retrieve settings.");
+		}
+	}
+
+	[HttpPut(Name = "Update Settings")]
+	public async Task<IActionResult> UpdateSettings(Setting updatedSetting)
+	{
+		try
+		{
+			var settings = await _settingService.UpdateSettings(updatedSetting);
+			return Ok(settings);
+		}
+		catch (Exception)
+		{
+			return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update settings.");
 		}
 	}
 }
