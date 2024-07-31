@@ -46,12 +46,8 @@ function CreateCabinForm() {
     });
   }
 
-  function onError(errors) {
-    console.log(errors);
-  }
-
   return (
-    <Form type="modal" onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form type="modal" onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"

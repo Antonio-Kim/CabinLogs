@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Bookings from './pages/Booking';
 import Cabins from './pages/Cabins';
 import Users from './pages/Users';
-import Settings from './ui/Settings';
+import Settings from './pages/Settings';
 import Account from './ui/Account';
 import PageNotFound from './ui/PageNotFound';
 import Login from './ui/Login';

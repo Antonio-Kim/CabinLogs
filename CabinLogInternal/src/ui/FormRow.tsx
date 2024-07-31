@@ -38,8 +38,8 @@ const Error = styled.span`
 `;
 
 type FormRowProps = {
-  label: string;
-  error: string | undefined;
+  label?: string;
+  error?: string | undefined;
   children: React.ReactNode;
 };
 
