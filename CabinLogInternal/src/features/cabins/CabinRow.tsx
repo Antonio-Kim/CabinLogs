@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
-import { Cabins, deleteCabin } from '../../services/apiCabins';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { Cabins } from '../../services/apiCabins';
+import { useState } from 'react';
+import CreateCabinForm from './CreateCabinForm';
+import { useDeleteCabin } from './useDeleteCabin';
+import { HiPencil, HiTrash } from 'react-icons/hi2';
 
 const TableRow = styled.div`
   display: grid;
@@ -48,31 +50,29 @@ type CabinRowProps = {
 };
 
 function CabinRow({ cabin }: CabinRowProps) {
+  const [showForm, setShowForm] = useState<boolean>(false);
   const { id: cabinId, name, maxCapacity, regularPrice, discount, image } = cabin;
-  const queryClient = useQueryClient();
-
-  const { isPending: isDeleting, mutate } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
-      toast.success('Cabin successfully deleted');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-    },
-    onError: (err: Error) => toast.error(err.message),
-  });
+  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   return (
-    <TableRow role="row">
-      <Img src={`http://localhost:5000/${image}`} />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity}</div>
-      <Price>{regularPrice}</Price>
-      <Discount>{discount}</Discount>
-      <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
-        Delete
-      </button>
-    </TableRow>
+    <>
+      <TableRow role="row">
+        <Img src={`http://localhost:5000/${image}`} />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {maxCapacity}</div>
+        <Price>{regularPrice}</Price>
+        {discount ? <Discount>{discount}</Discount> : <span>&mdash;</span>}
+        <div>
+          <button onClick={() => setShowForm((show) => !show)}>
+            <HiPencil />
+          </button>
+          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+            <HiTrash />
+          </button>
+        </div>
+      </TableRow>
+      {showForm && <CreateCabinForm />}
+    </>
   );
 }
 
