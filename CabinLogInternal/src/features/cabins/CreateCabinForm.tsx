@@ -8,6 +8,7 @@ import FileInput from '../../ui/FileInput';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import { useCreateCabin } from './useCreateCabin';
+import { ReactNode } from 'react';
 
 type FormData = {
   name: string;
@@ -18,7 +19,12 @@ type FormData = {
   image?: FileList;
 };
 
-function CreateCabinForm() {
+type CreateCabinFormType = {
+  children?: ReactNode;
+  onCloseModal?: () => void;
+};
+
+function CreateCabinForm({ onCloseModal }: CreateCabinFormType) {
   const { register, handleSubmit, reset, getValues, formState } = useForm<FormData>();
   const { errors } = formState;
   const { isCreating, createCabin } = useCreateCabin();
@@ -42,12 +48,15 @@ function CreateCabinForm() {
     }
 
     createCabin(formData, {
-      onSuccess: () => reset(),
+      onSuccess: () => {
+        reset();
+        onCloseModal?.();
+      },
     });
   }
 
   return (
-    <Form type="modal" onSubmit={handleSubmit(onSubmit)}>
+    <Form type={onCloseModal ? 'modal' : 'regular'} onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -115,7 +124,7 @@ function CreateCabinForm() {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button disabled={isCreating}>Add cabin</Button>
