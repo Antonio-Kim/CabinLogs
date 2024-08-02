@@ -11,6 +11,10 @@ Migrations
 CabinLogs.db
 CabinLogs.db-shm
 CabinLogs.db-wal
+
+# static files
+wwwroot
+
 # User-specific files
 *.rsuser
 *.suo

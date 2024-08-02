@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CabinLogsApi.Controllers;
 
 [ApiController]
-[EnableCors("AnyOrigins")]
 [Route("/bookings")]
+// [EnableCors("AnyOrigin")]
 public class BookingsController : ControllerBase
 {
     private readonly IBookingService _bookingService;
