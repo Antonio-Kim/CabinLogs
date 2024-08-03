@@ -1,3 +1,6 @@
+using CabinLogsApi.DTO.Cabins;
+using CabinLogsApi.DTO.Guests;
+
 namespace CabinLogsApi.DTO.Bookings;
 public class BookingDTO
 {
@@ -16,4 +19,6 @@ public class BookingDTO
 	public string? Observations { get; set; }
 	public int CabinId { get; set; }
 	public int GuestId { get; set; }
+	public CabinDTO? Cabin { get; set; }
+	public GuestDTO? Guest { get; set; }
 }

@@ -6,7 +6,7 @@ namespace CabinLogsApi.Models;
 [Table("guests")]
 public class Guest
 {
-	[Required]
+	[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 	[Key]
 	public int id { get; set; }
 	[Required]
@@ -17,5 +17,5 @@ public class Guest
 	public string? nationality { get; set; }
 	public string? countryFlag { get; set; }
 
-    public ICollection<Booking>? bookings { get; set; } = new List<Booking>();
+	public ICollection<Booking>? bookings { get; set; } = new List<Booking>();
 }

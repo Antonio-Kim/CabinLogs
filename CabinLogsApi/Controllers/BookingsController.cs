@@ -1,26 +1,56 @@
 ﻿using CabinLogsApi.DTO.Bookings;
-using Microsoft.AspNetCore.Cors;
+using CabinLogsApi.DTO.Cabins;
+using CabinLogsApi.DTO.Guests;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Dynamic.Core;
 
 namespace CabinLogsApi.Controllers;
 
 [ApiController]
 [Route("/bookings")]
-// [EnableCors("AnyOrigin")]
 public class BookingsController : ControllerBase
 {
     private readonly IBookingService _bookingService;
-    public BookingsController(IBookingService bookingService)
+    private readonly ICabinService _cabinService;
+    private readonly IGuestService _guestService;
+    public BookingsController(IBookingService bookingService, ICabinService cabinService, IGuestService guestService)
     {
         _bookingService = bookingService;
+        _cabinService = cabinService;
+        _guestService = guestService;
     }
 
     [HttpGet(Name = "Get All Bookings")]
-    public async Task<IActionResult> GetBookings()
+    public async Task<IActionResult> GetBookings(
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? options = "startDate",
+        [FromQuery] string? sortOrder = "asc",
+        [FromQuery] string? status = null)
     {
         try
         {
-            var bookings = await _bookingService.GetBookings();
+            var bookingsList = await _bookingService.GetBookings();
+            var query = bookingsList.AsQueryable();
+            if (string.IsNullOrWhiteSpace(options))
+            {
+                options = "startDate";
+            }
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status != "all")
+                {
+                    query = query.Where(b => (b.status ?? string.Empty).Contains(status));
+                }
+            }
+
+            query = query.OrderBy($"{options} {sortOrder}");
+            var bookings = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var cabinTasks = bookings.Select(b => _cabinService.GetCabin(b.cabinId)).ToArray();
+            var guestTasks = bookings.Select(b => _guestService.GetGuest(b.guestId)).ToArray();
+
+            var cabins = await Task.WhenAll(cabinTasks);
+            var guests = await Task.WhenAll(guestTasks);
             var data = bookings.Select(b => new BookingDTO
             {
                 Id = b.id,
@@ -37,7 +67,27 @@ public class BookingsController : ControllerBase
                 IsPaid = b.isPaid,
                 Observations = b.observations,
                 CabinId = b.cabinId,
-                GuestId = b.guestId
+                GuestId = b.guestId,
+                Cabin = cabins.FirstOrDefault(c => c != null && c.id == b.cabinId) is { } cabin ? new CabinDTO
+                {
+                    Id = cabin.id,
+                    created_at = cabin.created_at,
+                    Name = cabin.name,
+                    MaxCapacity = cabin.maxCapacity,
+                    RegularPrice = cabin.regularPrice,
+                    Discount = cabin.discount,
+                    Description = cabin.description
+                } : null,
+                Guest = guests.FirstOrDefault(g => g != null && g.id == b.guestId) is { } guest ? new GuestDTO
+                {
+                    Id = guest.id,
+                    created_at = guest.created_at,
+                    FullName = guest.fullName,
+                    Email = guest.email,
+                    NationalId = guest.nationalId,
+                    Nationality = guest.nationality,
+                    CountryFlag = guest.countryFlag
+                } : null
             }).ToList();
             return Ok(data);
         }
@@ -57,7 +107,48 @@ public class BookingsController : ControllerBase
             {
                 return StatusCode(404, "Booking not found.");
             }
-            return new OkObjectResult(booking);
+            var cabin = await _cabinService.GetCabin(booking.cabinId);
+            var guest = await _guestService.GetGuest(booking.guestId);
+
+            var bookingDTO = new BookingDTO
+            {
+                Id = booking.id,
+                created_at = booking.created_at,
+                StartDate = booking.startDate,
+                EndDate = booking.endDate,
+                NumberOfNights = booking.numberOfNights,
+                NumGuests = booking.numGuests,
+                CabinPrice = booking.cabinPrice,
+                ExtrasPrice = booking.extrasPrice,
+                TotalPrice = booking.totalPrice,
+                Status = booking.status,
+                HasBreakfast = booking.hasBreakfast,
+                IsPaid = booking.isPaid,
+                Observations = booking.observations,
+                CabinId = booking.cabinId,
+                GuestId = booking.guestId,
+                Cabin = cabin != null ? new CabinDTO
+                {
+                    Id = cabin.id,
+                    created_at = cabin.created_at,
+                    Name = cabin.name,
+                    MaxCapacity = cabin.maxCapacity,
+                    RegularPrice = cabin.regularPrice,
+                    Discount = cabin.discount,
+                    Description = cabin.description,
+                } : null,
+                Guest = guest != null ? new GuestDTO
+                {
+                    Id = guest.id,
+                    created_at = guest.created_at,
+                    FullName = guest.fullName,
+                    Email = guest.email,
+                    NationalId = guest.nationalId,
+                    Nationality = guest.nationality,
+                    CountryFlag = guest.countryFlag,
+                } : null,
+            };
+            return new OkObjectResult(bookingDTO);
         }
         catch (Exception)
         {

@@ -3,6 +3,7 @@ using CabinLogsApi.DTO.Bookings;
 using CabinLogsApi.Models;
 using CabinLogsApiTests.Fakes;
 using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CabinLogsApiTests.UnitTests.ControllerTests;
@@ -21,7 +22,9 @@ public class BookingsControllerTests : IDisposable
         // Arrange
         var context = _ctxBuilder.WithBookings().Build();
         var bookingService = new BookingService(context);
-        var _sut = new BookingsController(bookingService);
+        var guestService = new GuestService(context);
+        var cabinService = new CabinService(context);
+        var _sut = new BookingsController(bookingService, cabinService, guestService);
 
         // Act
         var result = await _sut.GetBookings();
@@ -53,7 +56,7 @@ public class BookingsControllerTests : IDisposable
                 CabinId = 1,
                 GuestId = 1,
             }
-        }, options =>options.Excluding(b => b.created_at));
+        }, options => options.Excluding(b => b.created_at));
     }
 
     [Fact]
@@ -62,7 +65,9 @@ public class BookingsControllerTests : IDisposable
         // Arrange
         var context = _ctxBuilder.Build();
         var bookingService = new BookingService(context);
-        var _sut = new BookingsController(bookingService);
+        var guestService = new GuestService(context);
+        var cabinService = new CabinService(context);
+        var _sut = new BookingsController(bookingService, cabinService, guestService);
 
         // Act
         var result = await _sut.GetBookings();
@@ -82,7 +87,9 @@ public class BookingsControllerTests : IDisposable
         // Arrange
         var context = _ctxBuilder.WithBookings().Build();
         var bookingService = new BookingService(context);
-        var _sut = new BookingsController(bookingService);
+        var guestService = new GuestService(context);
+        var cabinService = new CabinService(context);
+        var _sut = new BookingsController(bookingService, cabinService, guestService);
 
         // Act
         var result = await _sut.GetBooking(1);
@@ -119,7 +126,9 @@ public class BookingsControllerTests : IDisposable
         // Arrange
         var context = _ctxBuilder.WithBookings().Build();
         var bookingService = new BookingService(context);
-        var _sut = new BookingsController(bookingService);
+        var guestService = new GuestService(context);
+        var cabinService = new CabinService(context);
+        var _sut = new BookingsController(bookingService, cabinService, guestService);
 
         // Act
         var result = await _sut.GetBooking(555);
