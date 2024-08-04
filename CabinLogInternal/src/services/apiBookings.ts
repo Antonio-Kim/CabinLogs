@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../utils/constants';
 import { Cabins } from './apiCabins';
 import { Guest } from './apiGuests';
 
@@ -30,6 +31,12 @@ type GetBookingsProp = {
     field: string;
     direction: string;
   };
+  page?: number;
+};
+
+type GetBookingsResposne = {
+  bookings: Booking[];
+  totalCount: number;
 };
 
 export async function getBooking(id: number): Promise<Booking | void> {
@@ -46,7 +53,11 @@ export async function getBooking(id: number): Promise<Booking | void> {
   }
 }
 
-export async function getBookings({ filter, sortBy }: GetBookingsProp): Promise<Booking[]> {
+export async function getBookings({
+  filter,
+  sortBy,
+  page,
+}: GetBookingsProp): Promise<GetBookingsResposne> {
   try {
     let url = 'http://localhost:5000/bookings';
     const query = new URLSearchParams();
@@ -58,6 +69,11 @@ export async function getBookings({ filter, sortBy }: GetBookingsProp): Promise<
       query.append('options', sortBy.field);
       query.append('sortOrder', sortBy.direction);
     }
+    if (page) {
+      query.append('pageIndex', String(page - 1));
+      query.append('pageSize', String(PAGE_SIZE));
+    }
+
     if (query.toString()) {
       url += `?${query.toString()}`;
     }
@@ -66,10 +82,16 @@ export async function getBookings({ filter, sortBy }: GetBookingsProp): Promise<
     if (!response.ok) {
       throw new Error('Error occurred while fetching bookings.');
     }
-    const bookings: Booking[] = await response.json();
-    return bookings;
+    const responseBody: GetBookingsResposne = await response.json();
+    return {
+      bookings: responseBody.bookings,
+      totalCount: responseBody.totalCount,
+    };
   } catch (e) {
     console.error(`Error occurred ${e}`);
-    return [];
+    return {
+      bookings: [],
+      totalCount: 0,
+    };
   }
 }

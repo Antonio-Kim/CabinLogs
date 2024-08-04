@@ -15,15 +15,14 @@ export function useBookings() {
         : undefined;
   const [field, direction] = sortByRaw.split('-');
   const sortBy = { field, direction };
+  const page = !searchParams.get('pageIndex') ? 1 : Number(searchParams.get('pageIndex'));
 
-  const {
-    isPending,
-    data: bookings,
-    error,
-  } = useQuery({
-    queryKey: ['bookings', filter, sortBy],
-    queryFn: () => getBookings({ filter, sortBy }),
+  const { isPending, data, error } = useQuery({
+    queryKey: ['bookings', filter, sortBy, page],
+    queryFn: () => getBookings({ filter, sortBy, page }),
   });
 
-  return { isPending, error, bookings };
+  const bookings = data?.bookings || [];
+  const totalCount = data?.totalCount || 0;
+  return { isPending, error, bookings, totalCount };
 }

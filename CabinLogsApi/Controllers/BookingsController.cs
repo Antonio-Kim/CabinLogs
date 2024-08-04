@@ -23,7 +23,7 @@ public class BookingsController : ControllerBase
     [HttpGet(Name = "Get All Bookings")]
     public async Task<IActionResult> GetBookings(
         [FromQuery] int pageIndex = 0,
-        [FromQuery] int pageSize = 10,
+        [FromQuery] int pageSize = 50,
         [FromQuery] string? options = "startDate",
         [FromQuery] string? sortOrder = "asc",
         [FromQuery] string? status = null)
@@ -36,6 +36,9 @@ public class BookingsController : ControllerBase
             {
                 options = "startDate";
             }
+
+            var totalCount = query.Count();
+
             if (!string.IsNullOrEmpty(status))
             {
                 if (status != "all")
@@ -89,7 +92,11 @@ public class BookingsController : ControllerBase
                     CountryFlag = guest.countryFlag
                 } : null
             }).ToList();
-            return Ok(data);
+            return Ok(new
+            {
+                TotalCount = totalCount,
+                Bookings = data
+            });
         }
         catch (Exception)
         {
