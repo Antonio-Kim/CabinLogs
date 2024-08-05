@@ -12,6 +12,11 @@ import { useMoveBack } from '../../hooks/useMoveBack';
 import { useBooking } from './useBooking.ts';
 import Spinner from '../../ui/Spinner.tsx';
 import { useNavigate } from 'react-router-dom';
+import { HiArrowUpOnSquare } from 'react-icons/hi2';
+import { useCheckout } from '../check-in-out/useCheckout.ts';
+import Modal from '../../ui/Modal.tsx';
+import ConfirmDelete from '../../ui/ConfirmDelete.tsx';
+import { useDeleteBooking } from './useDeleteBooking.ts';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -21,6 +26,8 @@ const HeadingGroup = styled.div`
 
 function BookingDetail() {
   const { booking, isLoading } = useBooking();
+  const { checkout, isCheckingOut } = useCheckout();
+  const { deleteBooking, isDeleting } = useDeleteBooking();
   const moveBack = useMoveBack();
   const navigate = useNavigate();
   if (!booking) {
@@ -33,6 +40,17 @@ function BookingDetail() {
     unconfirmed: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (booking?.id) {
+      try {
+        await deleteBooking(String(booking.id));
+        navigate(-1);
+      } catch (error) {
+        console.error('Error during deletion:', error);
+      }
+    }
   };
 
   return (
@@ -54,6 +72,29 @@ function BookingDetail() {
         <Button variation="secondary" onClick={moveBack}>
           Back
         </Button>
+
+        <Modal>
+          <Modal.Open opens="delete">
+            <Button variation="danger">Delete booking</Button>
+          </Modal.Open>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="booking"
+              onConfirm={handleDeleteConfirm}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Modal>
+
+        {status === 'checked-in' && (
+          <Button
+            icon={<HiArrowUpOnSquare />}
+            onClick={() => checkout({ bookingId: String(booking?.id) })}
+            disabled={isCheckingOut}
+          >
+            Check out
+          </Button>
+        )}
       </ButtonGroup>
     </>
   );

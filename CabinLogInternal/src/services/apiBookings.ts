@@ -41,26 +41,39 @@ type GetBookingsResposne = {
 
 type UpdateStatus = {
   status: 'unconfirmed' | 'checked-in' | 'checked-out' | 'confirmed';
-  isPaid: boolean;
+  isPaid?: boolean;
 };
 
 export async function updateBooking(id: string, obj: UpdateStatus): Promise<Booking> {
   try {
     const response = await fetch(`http://localhost:5000/bookings/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(obj),
     });
     if (!response.ok) {
-      throw new Error('Error occurred while updating status.');
+      throw new Error('Error occurred while updating booking.');
     }
     const data: Booking = await response.json();
     return data;
   } catch (e) {
     console.error(`Error occurred: ${e}`);
     throw e;
+  }
+}
+
+export async function deleteBooking(id: string): Promise<void> {
+  try {
+    const response = await fetch(`http://localhost:5000/bookings/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('Error occurred while deleting booking');
+    }
+  } catch (e) {
+    console.error(`Error occurred: ${e}`);
   }
 }
 

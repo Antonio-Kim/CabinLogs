@@ -90,6 +90,7 @@ type ButtonProps = {
   children: ReactNode;
   icon?: ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 type MenusContextProps = {

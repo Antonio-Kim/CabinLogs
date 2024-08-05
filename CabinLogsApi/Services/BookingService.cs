@@ -9,6 +9,26 @@ public class BookingService : IBookingService
 		_context = context;
 	}
 
+	public async Task<bool> RemoveBooking(int id)
+	{
+		try
+		{
+			var booking = await GetBooking(id);
+			if (booking == null)
+			{
+				return false;
+			}
+			_context.Bookings.Remove(booking);
+			await _context.SaveChangesAsync();
+			return true;
+		}
+		catch (Exception)
+		{
+			throw new Exception("Error occured while trying remove booking");
+		}
+
+	}
+
 	public async Task<Booking?> GetBooking(int id)
 	{
 		try
@@ -40,9 +60,9 @@ public class BookingService : IBookingService
 		}
 	}
 
-    public async Task SaveBookingAsync(Booking booking)
-    {
-        _context.Bookings.Update(booking);
+	public async Task SaveBookingAsync(Booking booking)
+	{
+		_context.Bookings.Update(booking);
 		await _context.SaveChangesAsync();
-    }
+	}
 }

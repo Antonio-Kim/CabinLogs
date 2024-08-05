@@ -163,16 +163,16 @@ public class BookingsController : ControllerBase
         }
     }
 
-    [HttpPut("{id}", Name = "Updating booking")]
-    public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingStatusDTO updateStatus)
+    [HttpPatch("{id}", Name = "Updating booking")]
+    public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingDTO updateStatus)
     {
         if (updateStatus == null)
         {
-            return BadRequest("Body must include status and isPaid");
+            return BadRequest("Nothing is being updated.");
         }
 
         var validStatus = new HashSet<string> { "confirmed", "unconfirmed", "checked-in", "checked-out" };
-        if (!validStatus.Contains(updateStatus.Status))
+        if (updateStatus.Status != null && !validStatus.Contains(updateStatus.Status))
         {
             return BadRequest("Invalid status value");
         }
@@ -185,8 +185,11 @@ public class BookingsController : ControllerBase
                 return NotFound($"Booking Id {id} not found.");
             }
 
-            booking.status = updateStatus.Status;
-            booking.isPaid = updateStatus.IsPaid;
+            if (updateStatus.Status != null) booking.status = updateStatus.Status;
+            if (updateStatus.IsPaid.HasValue) booking.isPaid = updateStatus.IsPaid.Value;
+            if (updateStatus.HasBreakfast.HasValue) booking.hasBreakfast = updateStatus.HasBreakfast.Value;
+            if (updateStatus.ExtrasPrice.HasValue) booking.extrasPrice = updateStatus.ExtrasPrice.Value;
+            if (updateStatus.TotalPrice.HasValue) booking.totalPrice = updateStatus.TotalPrice.Value;
 
             await _bookingService.SaveBookingAsync(booking);
 
@@ -233,8 +236,28 @@ public class BookingsController : ControllerBase
             };
 
             return Ok(response);
-        } catch (Exception) {
+        }
+        catch (Exception)
+        {
             return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred while updating booking.");
+        }
+    }
+
+    [HttpDelete("{id}", Name = "Delete booking")]
+    public async Task<IActionResult> DeleteBooking(int id)
+    {
+        try
+        {
+            var result = await _bookingService.RemoveBooking(id);
+            if (result == false)
+            {
+                return NotFound($"Could not find booking with id {id}");
+            }
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Could not delete booking");
         }
     }
 }
