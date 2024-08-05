@@ -39,4 +39,10 @@ public class BookingService : IBookingService
 			throw new Exception($"Error occurred when trying to access database: {ex.Message}");
 		}
 	}
+
+    public async Task SaveBookingAsync(Booking booking)
+    {
+        _context.Bookings.Update(booking);
+		await _context.SaveChangesAsync();
+    }
 }

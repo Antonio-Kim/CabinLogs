@@ -162,4 +162,79 @@ public class BookingsController : ControllerBase
             return StatusCode(500, "Failed to retrive booking from database.");
         }
     }
+
+    [HttpPut("{id}", Name = "Updating booking")]
+    public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateBookingStatusDTO updateStatus)
+    {
+        if (updateStatus == null)
+        {
+            return BadRequest("Body must include status and isPaid");
+        }
+
+        var validStatus = new HashSet<string> { "confirmed", "unconfirmed", "checked-in", "checked-out" };
+        if (!validStatus.Contains(updateStatus.Status))
+        {
+            return BadRequest("Invalid status value");
+        }
+
+        try
+        {
+            var booking = await _bookingService.GetBooking(id);
+            if (booking == null)
+            {
+                return NotFound($"Booking Id {id} not found.");
+            }
+
+            booking.status = updateStatus.Status;
+            booking.isPaid = updateStatus.IsPaid;
+
+            await _bookingService.SaveBookingAsync(booking);
+
+            var cabin = await _cabinService.GetCabin(booking.cabinId);
+            var guest = await _guestService.GetGuest(booking.guestId);
+
+            var response = new BookingDTO
+            {
+                Id = booking.id,
+                created_at = booking.created_at,
+                StartDate = booking.startDate,
+                EndDate = booking.endDate,
+                NumberOfNights = booking.numberOfNights,
+                NumGuests = booking.numGuests,
+                CabinPrice = booking.cabinPrice,
+                ExtrasPrice = booking.extrasPrice,
+                TotalPrice = booking.totalPrice,
+                Status = booking.status,
+                HasBreakfast = booking.hasBreakfast,
+                IsPaid = booking.isPaid,
+                Observations = booking.observations,
+                CabinId = booking.cabinId,
+                GuestId = booking.guestId,
+                Cabin = cabin != null ? new CabinDTO
+                {
+                    Id = cabin.id,
+                    created_at = cabin.created_at,
+                    Name = cabin.name,
+                    MaxCapacity = cabin.maxCapacity,
+                    RegularPrice = cabin.regularPrice,
+                    Discount = cabin.discount,
+                    Description = cabin.description,
+                } : null,
+                Guest = guest != null ? new GuestDTO
+                {
+                    Id = guest.id,
+                    created_at = guest.created_at,
+                    FullName = guest.fullName,
+                    Email = guest.email,
+                    NationalId = guest.nationalId,
+                    Nationality = guest.nationality,
+                    CountryFlag = guest.countryFlag,
+                } : null,
+            };
+
+            return Ok(response);
+        } catch (Exception) {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred while updating booking.");
+        }
+    }
 }

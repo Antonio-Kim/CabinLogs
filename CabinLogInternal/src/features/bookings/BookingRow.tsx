@@ -4,6 +4,9 @@ import Tag from '../../ui/Tag';
 import Table from '../../ui/Table';
 import { Guest } from '../../services/apiGuests';
 import { Cabins } from '../../services/apiCabins';
+import Menus from '../../ui/Menu';
+import { HiArrowDownOnSquare, HiEye } from 'react-icons/hi2';
+import { useNavigate } from 'react-router-dom';
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -51,7 +54,7 @@ type BookingRowProps = {
 
 function BookingRow({
   booking: {
-    // id: bookingId,
+    id: bookingId,
     // created_at,
     startDate,
     endDate,
@@ -63,6 +66,7 @@ function BookingRow({
     cabin: { name: cabinName },
   },
 }: BookingRowProps) {
+  const navigate = useNavigate();
   const statusToTagName = {
     unconfirmed: 'blue',
     'checked-in': 'green',
@@ -92,6 +96,22 @@ function BookingRow({
       </Tag>
 
       <Amount>{totalPrice}</Amount>
+      <Menus.Menu>
+        <Menus.Toggle id={String(bookingId)} />
+        <Menus.List id={String(bookingId)}>
+          <Menus.Button icon={<HiEye />} onClick={() => navigate(`/bookings/${bookingId}`)}>
+            See details
+          </Menus.Button>
+          {status === 'unconfirmed' && (
+            <Menus.Button
+              icon={<HiArrowDownOnSquare />}
+              onClick={() => navigate(`/checkin/${bookingId}`)}
+            >
+              Check in
+            </Menus.Button>
+          )}
+        </Menus.List>
+      </Menus.Menu>
     </Table.Row>
   );
 }

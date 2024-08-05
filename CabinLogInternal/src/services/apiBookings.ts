@@ -18,8 +18,8 @@ export type Booking = {
   observations: string;
   cabinId: number;
   guestId: number;
-  cabin?: Cabins;
-  guest?: Guest;
+  cabin?: Cabins | null;
+  guest?: Guest | null;
 };
 
 type GetBookingsProp = {
@@ -38,6 +38,31 @@ type GetBookingsResposne = {
   bookings: Booking[];
   totalCount: number;
 };
+
+type UpdateStatus = {
+  status: 'unconfirmed' | 'checked-in' | 'checked-out' | 'confirmed';
+  isPaid: boolean;
+};
+
+export async function updateBooking(id: string, obj: UpdateStatus): Promise<Booking> {
+  try {
+    const response = await fetch(`http://localhost:5000/bookings/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    });
+    if (!response.ok) {
+      throw new Error('Error occurred while updating status.');
+    }
+    const data: Booking = await response.json();
+    return data;
+  } catch (e) {
+    console.error(`Error occurred: ${e}`);
+    throw e;
+  }
+}
 
 export async function getBooking(id: number): Promise<Booking | void> {
   try {
