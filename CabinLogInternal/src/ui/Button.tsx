@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 
 type SizeProps = {
@@ -8,7 +9,11 @@ type VariationProps = {
   variation?: 'primary' | 'secondary' | 'danger';
 };
 
-type ButtonProps = SizeProps & VariationProps;
+type ButtonProps = SizeProps &
+  VariationProps & {
+    icon?: ReactNode;
+    onClick: () => void;
+  };
 
 const sizes = {
   small: css`

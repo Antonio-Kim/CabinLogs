@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 import { Cabins } from '../services/apiCabins';
+import { Booking } from '../services/apiBookings';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -70,7 +71,7 @@ type TableElementProps = {
 };
 
 type BodyElementProps = {
-  data: Cabins[] | undefined;
+  data: Cabins[] | Booking[] | undefined;
   render: (item: Cabins) => ReactNode;
 };
 

@@ -50,6 +50,7 @@ function Filter({ filteredField, options }: FilterProps) {
 
   function handleClick(value: string) {
     searchParams.set(filteredField, value);
+    if (searchParams.get('pageIndex')) searchParams.set('pageIndex', '1');
     setSearchParams(searchParams);
   }
 

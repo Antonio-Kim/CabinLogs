@@ -6,7 +6,7 @@ export type Cabins = {
   regularPrice: number;
   discount: number;
   description: string;
-  image: string;
+  image?: string;
 };
 
 export async function createCabin(formData: FormData): Promise<void> {
