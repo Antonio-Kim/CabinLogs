@@ -39,7 +39,7 @@ public class AccountController : ControllerBase
 			{
 				var newUser = new ApiUser()
 				{
-					UserName = input.Email,
+					UserName = input.FullName,
 					Email = input.Email,
 				};
 				if (input.Email == null || input.Password == null)
