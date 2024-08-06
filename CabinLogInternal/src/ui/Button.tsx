@@ -13,6 +13,7 @@ type ButtonProps = SizeProps &
   VariationProps & {
     icon?: ReactNode;
     onClick: () => void;
+    size?: string;
   };
 
 const sizes = {
