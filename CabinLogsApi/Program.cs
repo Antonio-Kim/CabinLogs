@@ -28,7 +28,8 @@ builder.Services.AddIdentity<ApiUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {

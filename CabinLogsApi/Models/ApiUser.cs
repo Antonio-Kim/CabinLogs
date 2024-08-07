@@ -4,5 +4,5 @@ namespace CabinLogsApi.Models;
 
 public class ApiUser : IdentityUser
 {
-
+	public string? FullName { get; set; }
 }
