@@ -1,7 +1,5 @@
 import { createContext, ReactNode, useContext } from 'react';
 import styled from 'styled-components';
-import { Cabins } from '../services/apiCabins';
-import { Booking } from '../services/apiBookings';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -70,9 +68,9 @@ type TableElementProps = {
   children: ReactNode;
 };
 
-type BodyElementProps = {
-  data: Cabins[] | Booking[] | undefined;
-  render: (item: Cabins) => ReactNode;
+type BodyElementProps<T> = {
+  data: T[] | undefined;
+  render: (item: T) => ReactNode;
 };
 
 type TableContextType = {
@@ -113,7 +111,7 @@ function Row({ children }: TableElementProps) {
     </StyledRow>
   );
 }
-function Body({ data = [], render }: BodyElementProps) {
+function Body<T>({ data = [], render }: BodyElementProps<T>) {
   if (!data.length) return <Empty>No data to show at the moment</Empty>;
 
   return <StyledBody>{data.map(render)}</StyledBody>;

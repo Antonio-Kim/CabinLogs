@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { isValidElement, ReactElement, ReactNode } from 'react';
 import styled from 'styled-components';
 
 const StyledFormRow = styled.div`
@@ -24,9 +24,11 @@ type FormRowVerticalProps = {
 };
 
 function FormRowVertical({ label, error, children }: FormRowVerticalProps) {
+  const isElement = isValidElement(children);
+  const childId = isElement ? (children as ReactElement).props.id : '';
   return (
     <StyledFormRow>
-      {label && <Label htmlFor={children.props.id}>{label}</Label>}
+      {label && <Label htmlFor={childId}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
     </StyledFormRow>

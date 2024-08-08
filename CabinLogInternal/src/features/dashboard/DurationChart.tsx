@@ -114,15 +114,13 @@ type StartDataItem = {
   color: string;
 };
 
-function prepareData(startData: StartDataItem, stays: Booking[]) {
-  // A bit ugly code, but sometimes this is what it takes when working with real data 😅
-
-  function incArrayValue(arr, field) {
+function prepareData(startData: StartDataItem[], stays: Booking[]) {
+  function incArrayValue(arr: StartDataItem[], field: string): StartDataItem[] {
     return arr.map((obj) => (obj.duration === field ? { ...obj, value: obj.value + 1 } : obj));
   }
 
   const data = stays
-    .reduce((arr, cur) => {
+    .reduce((arr: StartDataItem[], cur: Booking) => {
       const num = cur.numberOfNights;
       if (num === 1) return incArrayValue(arr, '1 night');
       if (num === 2) return incArrayValue(arr, '2 nights');
@@ -134,7 +132,7 @@ function prepareData(startData: StartDataItem, stays: Booking[]) {
       if (num >= 21) return incArrayValue(arr, '21+ nights');
       return arr;
     }, startData)
-    .filter((obj) => obj.value > 0);
+    .filter((obj: StartDataItem) => obj.value > 0);
 
   return data;
 }
@@ -165,7 +163,7 @@ function DurationChart({ confirmedStays }: DurationChartProps) {
             cy="50%"
             paddingAngle={3}
           >
-            {data.map((entry) => (
+            {data.map((entry: StartDataItem) => (
               <Cell fill={entry.color} stroke={entry.color} key={entry.duration} />
             ))}
           </Pie>
@@ -173,7 +171,7 @@ function DurationChart({ confirmedStays }: DurationChartProps) {
           <Legend
             verticalAlign="middle"
             align="right"
-            width="30%"
+            width={120}
             layout="vertical"
             iconSize={10}
             iconType="circle"
