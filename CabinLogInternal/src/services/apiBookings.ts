@@ -34,7 +34,7 @@ type GetBookingsProp = {
   page?: number;
 };
 
-type GetBookingsResposne = {
+export type GetBookingsResponse = {
   bookings: Booking[];
   totalCount: number;
 };
@@ -95,7 +95,7 @@ export async function getBookings({
   filter,
   sortBy,
   page,
-}: GetBookingsProp): Promise<GetBookingsResposne> {
+}: GetBookingsProp): Promise<GetBookingsResponse> {
   try {
     let url = 'http://localhost:5000/bookings';
     const query = new URLSearchParams();
@@ -120,7 +120,71 @@ export async function getBookings({
     if (!response.ok) {
       throw new Error('Error occurred while fetching bookings.');
     }
-    const responseBody: GetBookingsResposne = await response.json();
+    const responseBody: GetBookingsResponse = await response.json();
+    return {
+      bookings: responseBody.bookings,
+      totalCount: responseBody.totalCount,
+    };
+  } catch (e) {
+    console.error(`Error occurred ${e}`);
+    return {
+      bookings: [],
+      totalCount: 0,
+    };
+  }
+}
+
+export async function getBookingsAfterDate(date: number): Promise<GetBookingsResponse> {
+  try {
+    let url = 'http://localhost:5000/bookings';
+    const query = new URLSearchParams();
+
+    if (date) {
+      query.append('created', String(date));
+    }
+
+    if (query.toString()) {
+      url += `?${query.toString()}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Error occurred while fetching bookings.');
+    }
+
+    const responseBody: GetBookingsResponse = await response.json();
+    return {
+      bookings: responseBody.bookings,
+      totalCount: responseBody.totalCount,
+    };
+  } catch (e) {
+    console.error(`Error occurred ${e}`);
+    return {
+      bookings: [],
+      totalCount: 0,
+    };
+  }
+}
+
+export async function getStaysAfterDate(date: number): Promise<GetBookingsResponse> {
+  try {
+    let url = 'http://localhost:5000/bookings';
+    const query = new URLSearchParams();
+
+    if (date) {
+      query.append('start', String(date));
+    }
+
+    if (query.toString()) {
+      url += `?${query.toString()}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Error occurred while fetching bookings.');
+    }
+
+    const responseBody: GetBookingsResponse = await response.json();
     return {
       bookings: responseBody.bookings,
       totalCount: responseBody.totalCount,
