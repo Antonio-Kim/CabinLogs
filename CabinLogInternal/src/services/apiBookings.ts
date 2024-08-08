@@ -197,3 +197,40 @@ export async function getStaysAfterDate(date: number): Promise<GetBookingsRespon
     };
   }
 }
+
+export async function getStaysTodayActivity(): Promise<GetBookingsResponse> {
+  // 1. Retrieve the values that are confirmed
+  // 2. Fiter out the data to today
+  // 3. Retrieve the value that are chcked-in
+  // 4. Filter ou the values that are today
+  // 5. Merge the daata together
+  try {
+    const unconfirmedURL = `http://localhost:5000/bookings?status=unconfirmed&start=7`;
+    const checkedinURL = `http://localhost:5000/bookings?status=checked-in&start=7`;
+    // const today = new Date().toISOString().split('T')[0];
+    const today = '2024-08-04';
+
+    const unconfirmedResponse = await fetch(unconfirmedURL);
+    const checkedinResponse = await fetch(checkedinURL);
+
+    const unconfirmedData = await unconfirmedResponse.json();
+    const checkedinData = await checkedinResponse.json();
+
+    const filteredUnconfirmedToday = unconfirmedData.bookings.filter((data: Booking) => {
+      const todayData = new Date(data.startDate).toISOString().split('T')[0];
+      return todayData === today;
+    });
+    const filteredCheckedInToday = checkedinData.bookings.filter((data: Booking) => {
+      const todayData = new Date(data.startDate).toISOString().split('T')[0];
+      return todayData === today;
+    });
+    const data: Booking[] = [...filteredCheckedInToday, ...filteredUnconfirmedToday];
+    const totalCount = data.length;
+    return {
+      bookings: data,
+      totalCount,
+    };
+  } catch (e) {
+    throw new Error("Could not retrieve today's data");
+  }
+}
