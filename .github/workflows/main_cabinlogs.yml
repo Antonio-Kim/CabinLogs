@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'CabinLogs'
           slot-name: 'Production'
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: .
           
