@@ -56,7 +56,7 @@ public class BookingServiceTests : IDisposable
         // Arrange
         var ctx = _ctxBuilder.Build();
         _sut = new BookingService(ctx);
-        
+
         // Act
         var bookings = await _sut.GetBookings();
 
