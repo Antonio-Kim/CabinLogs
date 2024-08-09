@@ -210,7 +210,7 @@ public class CabinServiceTests : IDisposable
         _sut = new CabinService(ctx);
         var initialCabin = new Cabin
         {
-            id = 2, 
+            id = 2,
             created_at = DateTime.UtcNow,
             name = "Test cabin",
             maxCapacity = 4,
@@ -234,7 +234,7 @@ public class CabinServiceTests : IDisposable
         var result = await _sut.UpdateCabin(initialCabin.id, updatedCabin);
 
         // Assert
-        result.Should().BeTrue(); 
+        result.Should().BeTrue();
 
         var getCabin = await ctx.Cabins.FindAsync(initialCabin.id);
         getCabin.Should().NotBeNull();

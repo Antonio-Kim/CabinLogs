@@ -17,6 +17,7 @@ import { useCheckout } from '../check-in-out/useCheckout.ts';
 import Modal from '../../ui/Modal.tsx';
 import ConfirmDelete from '../../ui/ConfirmDelete.tsx';
 import { useDeleteBooking } from './useDeleteBooking.ts';
+import Empty from '../../ui/Empty.tsx';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ function BookingDetail() {
   const moveBack = useMoveBack();
   const navigate = useNavigate();
   if (!booking) {
-    return <div>No booking found</div>;
+    return <Empty resourceName="booking" />;
   }
 
   if (isLoading) return <Spinner />;
@@ -58,7 +59,9 @@ function BookingDetail() {
       <Row type="horizontal">
         <HeadingGroup>
           <Heading as="h1">Booking #{booking?.id}</Heading>
-          <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
+          <Tag type={statusToTagName[status as keyof typeof statusToTagName]}>
+            {status.replace('-', ' ')}
+          </Tag>
         </HeadingGroup>
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>

@@ -26,7 +26,9 @@ public class BookingsController : ControllerBase
         [FromQuery] int pageSize = 50,
         [FromQuery] string? options = "startDate",
         [FromQuery] string? sortOrder = "asc",
-        [FromQuery] string? status = null)
+        [FromQuery] string? status = null,
+        [FromQuery] int? created = null,
+        [FromQuery] int? start = null)
     {
         try
         {
@@ -35,6 +37,20 @@ public class BookingsController : ControllerBase
             if (string.IsNullOrWhiteSpace(options))
             {
                 options = "startDate";
+            }
+
+            if (created.HasValue)
+            {
+                var endDate = DateTime.UtcNow.Date.AddDays(1).AddTicks(-1);
+                var startDate = DateTime.UtcNow.AddDays(-created.Value);
+                query = query.Where(b => b.created_at >= startDate && b.created_at <= endDate);
+            }
+
+            if (start.HasValue)
+            {
+                var endDate = DateTime.UtcNow;
+                var startDate = DateTime.UtcNow.AddDays(-start.Value);
+                query = query.Where(b => b.startDate >= startDate && b.startDate <= endDate);
             }
 
             var totalCount = query.Count();

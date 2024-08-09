@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 import Tag from '../../ui/Tag';
 import Table from '../../ui/Table';
-import { Guest } from '../../services/apiGuests';
-import { Cabins } from '../../services/apiCabins';
 import Menus from '../../ui/Menu';
 import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye, HiTrash } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +9,7 @@ import { useCheckout } from '../check-in-out/useCheckout';
 import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useDeleteBooking } from './useDeleteBooking';
+import { Booking as ApiBooking } from '../../services/apiBookings';
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -39,18 +38,7 @@ const Amount = styled.div`
   font-weight: 500;
 `;
 
-export type Booking = {
-  id: number;
-  created_at: string;
-  startDate: string;
-  endDate: string;
-  numNights: number;
-  numGuests: number;
-  totalPrice: number;
-  status: string;
-  guest: Guest;
-  cabin: Cabins;
-};
+export type Booking = ApiBooking;
 
 type BookingRowProps = {
   booking: Booking;
@@ -62,12 +50,12 @@ function BookingRow({
     // created_at,
     startDate,
     endDate,
-    numNights,
+    numberOfNights,
     // numGuests,
     totalPrice,
     status,
-    guest: { fullName: guestName, email },
-    cabin: { name: cabinName },
+    guest,
+    cabin,
   },
 }: BookingRowProps) {
   const navigate = useNavigate();
@@ -81,16 +69,16 @@ function BookingRow({
 
   return (
     <Table.Row>
-      <Cabin>{cabinName}</Cabin>
+      <Cabin>{cabin?.name}</Cabin>
 
       <Stacked>
-        <span>{guestName}</span>
-        <span>{email}</span>
+        <span>{guest?.fullName}</span>
+        <span>{guest?.email}</span>
       </Stacked>
 
       <Stacked>
         <span>
-          {startDate} &rarr; {numNights} night stay
+          {startDate} &rarr; {numberOfNights} night stay
         </span>
         <span>
           {startDate} &mdash; {endDate}

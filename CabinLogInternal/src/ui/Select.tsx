@@ -13,7 +13,7 @@ const StyledSelect = styled.select<StyledSelectProps>`
 `;
 
 type StyledSelectProps = {
-  type: string;
+  type?: string;
   value?: string;
   children?: ReactNode;
 };
@@ -21,6 +21,7 @@ type StyledSelectProps = {
 type SelectProps = {
   options: { value: string; label: string }[];
   value?: string;
+  type?: string;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
 function Select({ options, value, onChange, ...props }: SelectProps) {

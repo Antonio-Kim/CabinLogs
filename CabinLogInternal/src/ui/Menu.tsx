@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -125,6 +125,7 @@ function Toggle({ id }: ToggleProps) {
   const { openId, close, open, setPosition } = context;
 
   function handeClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
     const button = e.currentTarget.closest('button');
     const rect = button?.getBoundingClientRect();
     setPosition({
@@ -146,12 +147,12 @@ function List({ id, children }: ListProps) {
     throw new Error('Toggle requires context.');
   }
   const { openId, position, close } = context;
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick<HTMLUListElement>(close, false);
 
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position} ref={ref}>
+    <StyledList position={position} ref={ref as React.RefObject<HTMLUListElement>}>
       {children}
     </StyledList>,
     document.body,

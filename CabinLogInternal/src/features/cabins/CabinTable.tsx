@@ -14,20 +14,28 @@ function CabinTable() {
   if (isLoading) {
     <Spinner />;
   }
-  if (data === undefined || !data.length) return <Empty resourceName="Cabins"></Empty>;
+  if (!data || !data.length) {
+    return <Empty resourceName="Cabins" />;
+  }
 
   const filterValue = searchParams.get('discount') || 'all';
-  let filteredCabins;
-  if (filterValue === 'all') filteredCabins = data;
-  if (filterValue === 'no-discount') filteredCabins = data?.filter((cabin) => cabin.discount === 0);
-  if (filterValue === 'with-discount') filteredCabins = data?.filter((cabin) => cabin.discount > 0);
+  let filteredCabins: Cabins[] = [];
+  if (filterValue === 'all') {
+    filteredCabins = data;
+  } else if (filterValue === 'no-discount') {
+    filteredCabins = data.filter((cabin) => cabin.discount === 0);
+  } else if (filterValue === 'with-discount') {
+    filteredCabins = data.filter((cabin) => cabin.discount > 0);
+  }
 
   const sortBy = searchParams.get('sortBy') || 'startDate-asc';
   const [field, direction] = sortBy.split('-') as [keyof Cabins, 'asc' | 'desc'];
   const modifier = direction === 'asc' ? 1 : -1;
-  const sortedCabins = filteredCabins?.sort(
-    (a: Cabins, b: Cabins) => (a[field] - b[field]) * modifier,
-  );
+  const sortedCabins = filteredCabins.sort((a, b) => {
+    const aValue = a[field] as unknown as number;
+    const bValue = b[field] as unknown as number;
+    return (aValue - bValue) * modifier;
+  });
 
   return (
     <Menus>
