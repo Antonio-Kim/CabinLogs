@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -22,14 +22,14 @@ jobs:
         working-directory: CabinLogsApi
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./output
+        run: dotnet publish -c Release -o ${{ github.workspace }}/myapp
         working-directory: CabinLogsApi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: CabinLogsApi/output
+          path: ${{ github.workspace }}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -38,14 +38,14 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'CabinLogs'
           slot-name: 'Production'
-          package: .
+          package: ${{ github.workspace }}/myapp
